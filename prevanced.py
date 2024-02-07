@@ -5,11 +5,13 @@
 
 import requests
 import webbrowser
+import os
+import sys
 from colorama import Fore, Style
 from pyfiglet import figlet_format
 
 # Current version of the script
-VERSION = "1.0.0"
+VERSION = "0.0.0"
 UPDATE_REPO_OWNER = 'Dare-Devill'
 UPDATE_REPO_NAME = 'Prevanced'
 UPDATE_FILE_NAME = 'update.txt'
@@ -52,6 +54,24 @@ def display_release_info(release_info):
 def open_url_in_browser(url):
     webbrowser.open(url)
 
+# Function to update the script
+def update_script(latest_version):
+    # Construct the URL to download the latest version of the script
+    download_url = f"https://raw.githubusercontent.com/Dare-Devill/Prevanced/master/prevanced.py"
+    try:
+        response = requests.get(download_url)
+        response.raise_for_status()
+        # Save the new script to a temporary file
+        with open("Prevanced_new.py", "wb") as f:
+            f.write(response.content)
+        # Replace the current script with the new one
+        os.remove(sys.argv[0])  # Remove the current script
+        os.rename("Prevanced_new.py", sys.argv[0])  # Rename the new script to the original name
+        print(f"{Fore.GREEN}Update to version {latest_version} successful. Please restart the script.{Style.RESET_ALL}")
+        sys.exit(0)  # Exit the script after updating
+    except requests.exceptions.RequestException as e:
+        print(f"{Fore.RED}Failed to download the latest version of the script. Error: {e}{Style.RESET_ALL}")
+
 # Main function to run the script
 def main():
     # Fetch the version from update.txt in the update repository
@@ -59,10 +79,10 @@ def main():
 
     # Check if the fetched version is newer than the current version
     if latest_version and latest_version != VERSION:
-        update = input(f"{Fore.YELLOW}A new version of Prevanced is available ({latest_version}). Do you want to update? (yes/no): {Style.RESET_ALL}")
-        if update.lower() == 'yes':
-            # Update logic would go here, but it's not necessary for this task
-            pass
+        update = input(f"{Fore.YELLOW}A new version of Prevanced is available ({latest_version}). Do you want to update? (y/n): {Style.RESET_ALL}")
+        if update.lower() == 'y':
+            # Download the latest version of the script
+            update_script(latest_version)
         else:
             print(f"{Fore.YELLOW}Continuing with the current version ({VERSION}).{Style.RESET_ALL}")
     else:
