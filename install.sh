@@ -22,7 +22,7 @@ mkdir -p ~/bin
 cd ~/bin
 
 # Download the script and rename it
-curl -o prevanced.py https://raw.githubusercontent.com/yourusername/yourrepo/main/github_release_downloader.py
+curl -o prevanced.py https://raw.githubusercontent.com/Dare-Devill/Prevanced/main/prevanced.py
 
 # Make the script executable
 chmod +x prevanced.py
